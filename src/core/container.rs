@@ -140,6 +140,11 @@ impl<'d, I> Container<'d, I> {
             })
     }
 
+    /// Returns ip address of docker container as specified in NetworkSettings.IPAddress
+    pub fn get_ip_address(&self) -> String {
+        self.docker_client.ip(&self.id)
+    }
+
     pub fn stop(&self) {
         log::debug!("Stopping docker container {}", self.id);
 

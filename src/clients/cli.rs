@@ -281,7 +281,7 @@ impl Docker for Cli {
         LogStream::new(child.stderr.expect("stderr to be captured"))
     }
 
-    fn ports(&self, id: &str) -> Ports {
+    fn inspect(&self, id: &str) -> ContainerDetails{
         let child = self
             .inner
             .command()
@@ -298,11 +298,19 @@ impl Docker for Cli {
         let info = infos.remove(0);
 
         log::trace!("Fetched container info: {:#?}", info);
+        info
+    }
 
-        info.network_settings
+    fn ports(&self, id: &str) -> Ports {
+        self.inspect(id)
+            .network_settings
             .ports
             .map(Ports::new)
             .unwrap_or_default()
+    }
+
+    fn ip(&self, id: &str) -> String {
+        self.inspect(id).network_settings.ip_address
     }
 
     fn rm(&self, id: &str) {

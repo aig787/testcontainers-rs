@@ -1,4 +1,5 @@
 use crate::core::{logs::LogStream, ports::Ports, Port};
+use shiplift::rep::ContainerDetails;
 
 /// Container run command arguments.
 /// `name` - run image instance with the given name (should be explicitly set to be seen by other containers created in the same docker network).
@@ -18,7 +19,9 @@ pub struct RunArgs {
 pub(crate) trait Docker {
     fn stdout_logs(&self, id: &str) -> LogStream;
     fn stderr_logs(&self, id: &str) -> LogStream;
+    fn inspect(&self, id: &str) -> ContainerDetails;
     fn ports(&self, id: &str) -> Ports;
+    fn ip(&self, id: &str) -> String;
     fn rm(&self, id: &str);
     fn stop(&self, id: &str);
     fn start(&self, id: &str);
